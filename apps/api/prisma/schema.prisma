@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  super_admin
+  supervisor
+  employee
+}
+
+enum UserStatus {
+  active
+  disabled
+}
+
+enum TaskStatus {
+  pending
+  in_progress
+  completed
+  expired
+}
+
+model Department {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  users     User[]
+
+  @@map("departments")
+}
+
+model User {
+  id           String     @id @default(uuid())
+  username     String     @unique
+  passwordHash String     @map("password_hash")
+  displayName  String     @map("display_name")
+  avatarUrl    String?    @map("avatar_url")
+  role         UserRole   @default(employee)
+  status       UserStatus @default(active)
+  departmentId String?    @map("department_id")
+  department   Department? @relation(fields: [departmentId], references: [id])
+  honorPoints  Int        @default(0) @map("honor_points")
+  likeCount    Int        @default(0) @map("like_count")
+  createdAt    DateTime   @default(now()) @map("created_at")
+
+  issuedIncentives    IncentiveRecord[]    @relation("IssuedBy")
+  incentiveRecipients IncentiveRecipient[]
+  assignedTasks       TaskOrder[]          @relation("Assignee")
+  createdTasks        TaskOrder[]          @relation("AssignedBy")
+  likesGiven          Like[]               @relation("LikesGiven")
+  likesReceived       Like[]               @relation("LikesReceived")
+  coHonorEdgesA       CoHonorEdge[]        @relation("UserA")
+  coHonorEdgesB       CoHonorEdge[]        @relation("UserB")
+
+  @@map("users")
+}
+
+model IncentiveType {
+  id          String            @id @default(uuid())
+  name        String
+  honorValue  Int               @default(10) @map("honor_value")
+  badgeIcon   String?           @map("badge_icon")
+  incentives  IncentiveRecord[]
+
+  @@map("incentive_types")
+}
+
+model IncentiveRecord {
+  id          String               @id @default(uuid())
+  title       String
+  description String?
+  typeId      String?              @map("type_id")
+  type        IncentiveType?       @relation(fields: [typeId], references: [id])
+  honorValue  Int                  @map("honor_value")
+  issuedById  String               @map("issued_by")
+  issuedBy    User                 @relation("IssuedBy", fields: [issuedById], references: [id])
+  issuedAt    DateTime             @default(now()) @map("issued_at")
+  recipients  IncentiveRecipient[]
+
+  @@map("incentive_records")
+}
+
+model IncentiveRecipient {
+  incentiveId String          @map("incentive_id")
+  userId      String          @map("user_id")
+  incentive   IncentiveRecord @relation(fields: [incentiveId], references: [id], onDelete: Cascade)
+  user        User            @relation(fields: [userId], references: [id])
+
+  @@id([incentiveId, userId])
+  @@map("incentive_recipients")
+}
+
+model CoHonorEdge {
+  userAId         String   @map("user_a_id")
+  userBId         String   @map("user_b_id")
+  userA           User     @relation("UserA", fields: [userAId], references: [id])
+  userB           User     @relation("UserB", fields: [userBId], references: [id])
+  coCount         Int      @default(1) @map("co_count")
+  totalHonorValue Int      @default(0) @map("total_honor_value")
+  lastCoAt        DateTime @default(now()) @map("last_co_at")
+
+  @@id([userAId, userBId])
+  @@map("co_honor_edges")
+}
+
+model TaskOrder {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  assigneeId  String     @map("assignee_id")
+  assignee    User       @relation("Assignee", fields: [assigneeId], references: [id])
+  assignedById String    @map("assigned_by")
+  assignedBy  User       @relation("AssignedBy", fields: [assignedById], references: [id])
+  status      TaskStatus @default(pending)
+  dueAt       DateTime?  @map("due_at")
+  createdAt   DateTime   @default(now()) @map("created_at")
+
+  @@map("task_orders")
+}
+
+model Like {
+  id         String   @id @default(uuid())
+  fromUserId String   @map("from_user_id")
+  toUserId   String   @map("to_user_id")
+  fromUser   User     @relation("LikesGiven", fields: [fromUserId], references: [id])
+  toUser     User     @relation("LikesReceived", fields: [toUserId], references: [id])
+  targetType String   @map("target_type")
+  targetId   String?  @map("target_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@unique([fromUserId, toUserId, targetType, targetId])
+  @@map("likes")
+}

@@ -1,0 +1,90 @@
+# 生产/离线部署：仅使用预构建镜像，无需源码 build
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: woh-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-honor}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_strong_password}
+      POSTGRES_DB: ${POSTGRES_DB:-windowofhonor}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-honor} -d ${POSTGRES_DB:-windowofhonor}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: woh-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  api:
+    image: windowofhonor-api:1.0.0
+    container_name: woh-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      APP_VERSION: ${APP_VERSION:-1.0.0}
+      API_PORT: 3000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-honor}:${POSTGRES_PASSWORD:-change_me_strong_password}@postgres:5432/${POSTGRES_DB:-windowofhonor}
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:-change_me_jwt_secret_min_32_chars}
+      MCP_SERVICE_TOKEN: ${MCP_SERVICE_TOKEN:-change_me_service_token_for_mcp_to_api}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080}
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://localhost:3000/api/health']
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
+  mcp:
+    image: windowofhonor-mcp:1.0.0
+    container_name: woh-mcp
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_started
+    environment:
+      NODE_ENV: production
+      MCP_PORT: 3100
+      MCP_API_KEY: ${MCP_API_KEY:-change_me_mcp_client_key}
+      MCP_SERVICE_TOKEN: ${MCP_SERVICE_TOKEN:-change_me_service_token_for_mcp_to_api}
+      API_BASE_URL: http://api:3000
+    ports:
+      - '3100:3100'
+
+  web:
+    image: windowofhonor-web:1.0.0
+    container_name: woh-web
+    restart: unless-stopped
+
+  gateway:
+    image: nginx:1.27-alpine
+    container_name: woh-gateway
+    restart: unless-stopped
+    depends_on:
+      - api
+      - web
+      - mcp
+    ports:
+      - '${NGINX_PORT:-8080}:80'
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "window-of-honor": {
+      "url": "http://localhost:3100/mcp",
+      "headers": {
+        "Authorization": "Bearer change_me_mcp_client_key"
+      }
+    }
+  }
+}

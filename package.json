@@ -1,0 +1,13 @@
+{
+  "name": "window-of-honor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "荣耀之窗 WindowOFHonor - 企业荣誉激励与展示系统",
+  "scripts": {
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "test": "bash scripts/run-all-tests.sh",
+    "test:smoke": "node scripts/system-smoke-test.mjs"
+  }
+}
