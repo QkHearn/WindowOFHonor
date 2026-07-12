@@ -27,21 +27,29 @@ export function FullscreenShell({
 
   return (
     <div className="min-h-screen bg-ink text-ivory relative overflow-x-hidden">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(201,169,98,0.12),transparent_55%)]" />
-      <header className="fixed top-0 left-0 right-0 z-50 px-6 py-5 flex items-center justify-between">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage:
+            'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(201,169,98,0.16), transparent 60%)',
+        }}
+      />
+      <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex items-center justify-between bg-ink/90 backdrop-blur-md border-b border-champagne/15">
         <button
           type="button"
           onClick={goBack}
-          className="text-sm tracking-[0.25em] text-champagne/90 hover:text-champagne transition-colors flex items-center gap-2"
+          className="text-sm font-medium text-ivory/80 hover:text-champagne transition-colors flex items-center gap-2 group"
         >
-          <span aria-hidden>←</span>
+          <span className="group-hover:-translate-x-0.5 transition-transform" aria-hidden>
+            ←
+          </span>
           <span>返回</span>
         </button>
         {subtitle && (
-          <p className="text-[10px] tracking-[0.4em] uppercase text-champagne/50 hidden sm:block">{subtitle}</p>
+          <p className="section-label text-champagne/70 hidden sm:block">{subtitle}</p>
         )}
       </header>
-      <main className="relative z-10 pt-20 pb-12 px-6">{children}</main>
+      <main className="relative z-10 pt-24 pb-14 px-6 max-w-5xl mx-auto">{children}</main>
     </div>
   );
 }

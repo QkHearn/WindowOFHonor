@@ -74,7 +74,7 @@ export function TaskOrderCard({
   }
 
   return (
-    <Card className="!p-4">
+    <Card className="!p-5 lux-card-hover">
       <div className="flex justify-between items-start gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">

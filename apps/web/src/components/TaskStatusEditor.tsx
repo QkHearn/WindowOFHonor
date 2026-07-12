@@ -22,7 +22,7 @@ function getEditableOptions(dueAt?: string | null) {
 
 export function TaskStatusBadge({ status }: { status: string }) {
   return (
-    <span className="text-xs uppercase tracking-widest border border-champagne/40 px-2 py-0.5 text-champagne">
+    <span className="text-xs font-medium border border-bronze/40 bg-champagne/10 px-2.5 py-1 text-bronze rounded-sm">
       {TASK_STATUS_LABEL[status] ?? status}
     </span>
   );
@@ -59,7 +59,7 @@ export function TaskStatusEditor({
             onChange(next);
           }
         }}
-        className="text-xs bg-transparent border border-champagne/30 px-2 py-1 focus:outline-none focus:border-champagne disabled:opacity-50"
+        className="text-sm font-medium bg-paper border border-bronze/30 px-3 py-1.5 rounded-sm focus:outline-none focus:border-champagne text-ink disabled:opacity-50"
       >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
@@ -73,7 +73,7 @@ export function TaskStatusEditor({
 
 export function TaskStatusHint() {
   return (
-    <p className="text-xs text-graphite mb-4">
+    <p className="text-sm text-mist mb-5 leading-relaxed">
       截止前可在「进行中」与「已完成」之间切换；截止后可在「已逾期」与「已完成」之间切换。超过截止时间且仍为进行中的任务将自动变为已逾期。
     </p>
   );

@@ -2,8 +2,151 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: Inter, 'Source Han Sans SC', sans-serif;
-  -webkit-font-smoothing: antialiased;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    font-family: Inter, 'Source Han Sans SC', 'PingFang SC', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #0a0a0a;
+    background-color: #f7f3ed;
+  }
+
+  ::selection {
+    background: rgba(201, 169, 98, 0.35);
+    color: #0a0a0a;
+  }
+}
+
+@layer components {
+  /* ── 浅色工作区 ── */
+  .page-shell {
+    @apply min-h-screen text-ink font-body relative;
+    background-color: #f7f3ed;
+    background-image: radial-gradient(ellipse 90% 60% at 50% -20%, rgba(201, 169, 98, 0.07), transparent 60%);
+  }
+
+  /* ── 登录 / 注册 ── */
+  .auth-page {
+    @apply min-h-screen flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden;
+    background-color: #0a0a0a;
+    background-image:
+      radial-gradient(ellipse 60% 45% at 50% 15%, rgba(201, 169, 98, 0.18), transparent 65%),
+      radial-gradient(circle at 80% 80%, rgba(166, 139, 75, 0.08), transparent 45%);
+  }
+
+  .auth-card {
+    @apply w-full max-w-[420px] relative z-10 rounded-sm p-10;
+    color: #0a0a0a;
+    background: #fffdf9;
+    border: 1px solid rgba(201, 169, 98, 0.35);
+    box-shadow:
+      0 32px 80px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  /* ── 卡片 ── */
+  .lux-card {
+    @apply rounded-sm p-6 transition-all duration-300;
+    background: #fffdf9;
+    border: 1px solid rgba(166, 139, 75, 0.22);
+    box-shadow: 0 1px 0 rgba(201, 169, 98, 0.1), 0 12px 40px rgba(10, 10, 10, 0.06);
+  }
+
+  .lux-card-hover:hover {
+    border-color: rgba(201, 169, 98, 0.45);
+    box-shadow: 0 2px 0 rgba(201, 169, 98, 0.15), 0 20px 56px rgba(10, 10, 10, 0.1);
+    transform: translateY(-2px);
+  }
+
+  /* ── 深色顶栏 ── */
+  .app-nav {
+    @apply sticky top-0 z-50;
+    background: #0a0a0a;
+    border-bottom: 1px solid rgba(201, 169, 98, 0.22);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  .nav-link {
+    @apply relative text-sm font-medium transition-colors duration-300 whitespace-nowrap py-1;
+    color: rgba(247, 243, 237, 0.72);
+  }
+
+  .nav-link:hover {
+    color: #f7f3ed;
+  }
+
+  .nav-link-active {
+    color: #c9a962;
+  }
+
+  .nav-link-active::after {
+    content: '';
+    @apply absolute -bottom-[17px] left-0 right-0 h-0.5;
+    background: linear-gradient(90deg, transparent, #c9a962, transparent);
+  }
+
+  /* ── 入口 tile ── */
+  .entry-tile {
+    @apply block relative overflow-hidden p-6 transition-all duration-300 rounded-sm;
+    background: #fffdf9;
+    border: 1px solid rgba(166, 139, 75, 0.22);
+    border-left: 3px solid rgba(201, 169, 98, 0.35);
+    box-shadow: 0 8px 28px rgba(10, 10, 10, 0.04);
+  }
+
+  .entry-tile:hover {
+    border-color: rgba(201, 169, 98, 0.4);
+    border-left-color: #c9a962;
+    box-shadow: 0 12px 36px rgba(10, 10, 10, 0.08);
+    transform: translateY(-1px);
+  }
+
+  .metric-value {
+    @apply font-display tabular-nums text-bronze font-semibold;
+  }
+
+  .section-label {
+    @apply text-[11px] font-medium uppercase tracking-[0.28em] text-bronze;
+  }
+
+  .shimmer-line {
+    @apply relative overflow-hidden;
+  }
+
+  .shimmer-line::after {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(90deg, transparent, rgba(201, 169, 98, 0.85), transparent);
+    animation: shimmer 1.8s ease-in-out infinite;
+  }
+}
+
+@layer utilities {
+  .animate-fade-up {
+    animation: fadeUp 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

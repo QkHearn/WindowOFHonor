@@ -9,9 +9,12 @@ export function MeBackLink({ dim }: { dim?: MeDimension }) {
   return (
     <Link
       to={target}
-      className="inline-block text-sm text-graphite hover:text-champagne tracking-wider mb-6 transition-colors"
+      className="inline-flex items-center gap-2 text-sm font-medium text-mist hover:text-bronze mb-8 transition-colors group"
     >
-      ← {label}
+      <span className="group-hover:-translate-x-0.5 transition-transform" aria-hidden>
+        ←
+      </span>
+      {label}
     </Link>
   );
 }

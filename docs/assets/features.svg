@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 280" fill="none">
+  <rect width="960" height="280" rx="12" fill="#141414"/>
+  <rect x="24" y="24" width="912" height="232" rx="8" stroke="#C9A962" stroke-opacity="0.25" stroke-width="1"/>
+  <text x="480" y="52" text-anchor="middle" fill="#8a8a8a" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11" letter-spacing="0.2em">CORE CAPABILITIES</text>
+
+  <!-- Cards -->
+  <g>
+    <rect x="48" y="72" width="200" height="148" rx="8" fill="#1f1f1f" stroke="#C9A962" stroke-opacity="0.35"/>
+    <text x="148" y="108" text-anchor="middle" fill="#C9A962" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22">&</text>
+    <text x="148" y="136" text-anchor="middle" fill="#f5f0e8" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="600">À±Ñ></text>
+    <text x="148" y="162" text-anchor="middle" fill="#8a8a8a" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11">;¡âÑ>^O</text>
+    <text x="148" y="180" text-anchor="middle" fill="#8a8a8a" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11">/q·c‰°U</text>
+  </g>
+  <g>
+    <rect x="268" y="72" width="200" height="148" rx="8" fill="#1f1f1f" stroke="#C9A962" stroke-opacity="0.35"/>
+    <text x="368" y="108" text-anchor="middle" fill="#C9A962" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22">È</text>
+    <text x="368" y="136" text-anchor="middle" fill="#f5f0e8" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="600">û¡ä</text>
+    <text x="368" y="162" text-anchor="middle" fill="#8a8a8a" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11">Mß*¶¡</text>
+    <text x="368" y="180" text-anchor="middle" fill="#8a8a8a" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11">*bM/6µAl</text>
+  </g>
+  <g>
+    <rect x="488" y="72" width="200" height="148" rx="8" fill="#1f1f1f" stroke="#C9A962" stroke-opacity="0.35"/>
+    <text x="588" y="108" text-anchor="middle" fill="#C9A962" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22">Î</text>
+    <text x="588" y="136" text-anchor="middle" fill="#f5f0e8" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="600">c‰¿</text>
+    <text x="588" y="162" text-anchor="middle" fill="#8a8a8a" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11">hOU­’Lœ</text>
+    <text x="588" y="180" text-anchor="middle" fill="#8a8a8a" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11">*º / âÌô¦</text>
+  </g>
+  <g>
+    <rect x="708" y="72" width="200" height="148" rx="8" fill="#1f1f1f" stroke="#C9A962" stroke-opacity="0.35"/>
+    <text x="808" y="108" text-anchor="middle" fill="#C9A962" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22">!</text>
+    <text x="808" y="136" text-anchor="middle" fill="#f5f0e8" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="600">MCP ¥e</text>
+    <text x="808" y="162" text-anchor="middle" fill="#8a8a8a" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11">Cursor / '!‹(</text>
+    <text x="808" y="180" text-anchor="middle" fill="#8a8a8a" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11">Ñ>À± · åâc‰</text>
+  </g>
+</svg>

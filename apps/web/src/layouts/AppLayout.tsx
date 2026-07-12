@@ -1,11 +1,20 @@
+import type { ReactNode } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { defaultHomePath } from '../auth/storage';
 import { GoldDivider } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 
-const linkClass = ({ isActive }: { isActive: boolean }) =>
-  `text-sm tracking-wider transition-colors whitespace-nowrap ${isActive ? 'text-champagne' : 'text-graphite hover:text-ink'}`;
+function NavItem({ to, children }: { to: string; children: ReactNode }) {
+  return (
+    <NavLink
+      to={to}
+      className={({ isActive }) => `nav-link ${isActive ? 'nav-link-active' : ''}`}
+    >
+      {children}
+    </NavLink>
+  );
+}
 
 export function AppLayout() {
   const { user, logout, isSuperAdmin, isAdmin, isMember, isAuthenticated } = useAuth();
@@ -20,46 +29,60 @@ export function AppLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F3ED] text-ink font-body">
-      <nav className="border-b border-champagne/15 bg-ivory/90 backdrop-blur sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
-          <button type="button" onClick={goHome} className="font-display text-lg tracking-widest shrink-0">
+    <div className="page-shell">
+      <nav className="app-nav">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-6">
+          <button
+            type="button"
+            onClick={goHome}
+            className="font-display text-xl font-semibold text-ivory tracking-wide shrink-0 hover:text-champagne transition-colors"
+          >
             荣耀之窗
           </button>
-          <div className="flex items-center gap-5 overflow-x-auto">
-            {isSuperAdmin && (
-              <NavLink to="/system" className={linkClass}>系统管理</NavLink>
-            )}
+          <div className="flex items-center gap-7 overflow-x-auto">
+            {isSuperAdmin && <NavItem to="/system">系统管理</NavItem>}
             {isMember && (
               <>
-                <NavLink to="/me" className={linkClass}>个人中心</NavLink>
-                <NavLink to="/appreciation" className={linkClass}>发放赞赏</NavLink>
-                {isAdmin && (
-                  <NavLink to="/tasks/issue" className={linkClass}>发放任务令</NavLink>
-                )}
-                <NavLink to="/leaderboard" className={linkClass}>排行榜</NavLink>
-                <NavLink to="/broadcast" className={linkClass}>荣誉殿堂</NavLink>
+                <NavItem to="/me">个人中心</NavItem>
+                <NavItem to="/appreciation">发放赞赏</NavItem>
+                {isAdmin && <NavItem to="/tasks/issue">发放任务令</NavItem>}
+                <NavItem to="/leaderboard">排行榜</NavItem>
+                <NavItem to="/broadcast">荣誉殿堂</NavItem>
               </>
             )}
           </div>
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-4 shrink-0">
             {isAuthenticated ? (
               <>
-                <span className="text-sm text-graphite hidden md:inline">{user?.displayName}</span>
-                <Button variant="ghost" onClick={() => { logout(); navigate('/login'); }}>退出</Button>
+                <span className="text-sm text-ivory/65 hidden md:inline font-medium">
+                  {user?.displayName}
+                </span>
+                <Button
+                  variant="ghost"
+                  onDark
+                  className="!px-4 !py-2 !text-sm"
+                  onClick={() => {
+                    logout();
+                    navigate('/login');
+                  }}
+                >
+                  退出
+                </Button>
               </>
             ) : (
-              <Button variant="outline" onClick={() => navigate('/login')}>登录</Button>
+              <Button variant="outline" onDark className="!px-4 !py-2" onClick={() => navigate('/login')}>
+                登录
+              </Button>
             )}
           </div>
         </div>
       </nav>
-      <main className="max-w-6xl mx-auto px-6 py-12">
+      <main className="max-w-6xl mx-auto px-6 py-10 md:py-12">
         <Outlet />
       </main>
-      <footer className="max-w-6xl mx-auto px-6 pb-8">
+      <footer className="max-w-6xl mx-auto px-6 pb-10">
         <GoldDivider />
-        <p className="text-center text-xs text-graphite/60 tracking-[0.3em] uppercase mt-6">Window of Honor</p>
+        <p className="text-center section-label opacity-50 mt-6">Window of Honor</p>
       </footer>
     </div>
   );

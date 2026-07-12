@@ -27,16 +27,16 @@ export function TaskStatusFilter({
   onChange: (next: TaskStatusFilterValue) => void;
 }) {
   return (
-    <div className="flex flex-wrap gap-2 mb-6">
+    <div className="flex flex-wrap gap-2 mb-8">
       {TASK_STATUS_FILTERS.map((opt) => (
         <button
           key={opt.value}
           type="button"
           onClick={() => onChange(opt.value)}
-          className={`text-xs px-3 py-1.5 border tracking-wider transition-colors ${
+          className={`text-sm font-medium px-4 py-2 border transition-all duration-300 rounded-sm ${
             value === opt.value
-              ? 'border-champagne bg-champagne/10 text-ink'
-              : 'border-champagne/20 text-graphite hover:border-champagne/40'
+              ? 'border-champagne bg-champagne/15 text-ink shadow-sm'
+              : 'border-bronze/25 text-mist bg-paper hover:border-champagne/40 hover:text-graphite'
           }`}
         >
           {opt.label}
