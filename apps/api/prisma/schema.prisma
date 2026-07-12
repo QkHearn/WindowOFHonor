@@ -30,8 +30,19 @@ model Department {
   name      String
   createdAt DateTime @default(now()) @map("created_at")
   users     User[]
+  admins    AdminDepartment[]
 
   @@map("departments")
+}
+
+model AdminDepartment {
+  userId       String     @map("user_id")
+  departmentId String     @map("department_id")
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+
+  @@id([userId, departmentId])
+  @@map("admin_departments")
 }
 
 model User {
@@ -56,6 +67,7 @@ model User {
   likesReceived       Like[]               @relation("LikesReceived")
   coHonorEdgesA       CoHonorEdge[]        @relation("UserA")
   coHonorEdgesB       CoHonorEdge[]        @relation("UserB")
+  managedDepartments  AdminDepartment[]
 
   @@map("users")
 }
@@ -116,7 +128,7 @@ model TaskOrder {
   assignee    User       @relation("Assignee", fields: [assigneeId], references: [id])
   assignedById String    @map("assigned_by")
   assignedBy  User       @relation("AssignedBy", fields: [assignedById], references: [id])
-  status      TaskStatus @default(pending)
+  status      TaskStatus @default(in_progress)
   dueAt       DateTime?  @map("due_at")
   createdAt   DateTime   @default(now()) @map("created_at")
 

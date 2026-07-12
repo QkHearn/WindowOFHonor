@@ -67,7 +67,7 @@ export default function SupervisorTasksPage() {
 
   return (
     <div>
-      <PageHeader title="任务令管理" subtitle="向一名或多名成员分配任务与挑战" />
+      <PageHeader title="任务令管理" subtitle="向所管理组织的员工发放任务令" />
       <div className="grid md:grid-cols-2 gap-10">
         <form onSubmit={submit}>
           <h2 className="font-display text-xl mb-4">发放任务令</h2>
@@ -75,7 +75,7 @@ export default function SupervisorTasksPage() {
             token={token!}
             selected={selected}
             onChange={setSelected}
-            label="选择接收人（可多选）"
+            label="选择组织成员（可多选）"
           />
           <div className="mt-8 space-y-6">
             <Input label="任务标题" value={title} onChange={(e) => setTitle(e.target.value)} required />

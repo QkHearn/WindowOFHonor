@@ -66,14 +66,11 @@ export default function LoginPage() {
             {loading ? '进入中…' : '进入'}
           </Button>
           <Button type="button" variant="outline" onClick={() => navigate('/broadcast')}>
-            荣誉展播
+            荣誉殿堂
           </Button>
         </div>
         <GoldDivider className="mt-8" />
-        <p className="text-xs text-graphite text-center mt-4">
-          演示：admin / admin123 · zhangsan / 123456
-        </p>
-        <p className="text-xs text-center mt-3">
+        <p className="text-xs text-center mt-4">
           <button type="button" onClick={() => navigate('/register')} className="text-champagne hover:underline tracking-wider">
             没有账号？立即注册
           </button>

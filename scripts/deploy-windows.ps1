@@ -93,10 +93,27 @@ if (-not $healthy) {
     Die "API 启动超时，请检查: docker compose logs api"
 }
 
-# ── 初始化演示数据（仅首次）──────────────────────
+# ── 初始化系统管理员（仅首次）──────────────────────
 if (-not (Test-Path $SeedFlag)) {
-    Log "初始化演示数据（admin/admin123, zhangsan/123456）..."
-    docker compose -f $ComposeFile exec -T api npx ts-node prisma/seed.ts
+    Log "初始化系统管理员（读取 .env 中的 SEED_SUPERADMIN_*）..."
+    Get-Content $EnvFile | ForEach-Object {
+        if ($_ -match '^\s*([^#=]+)=(.*)$') {
+            $name = $matches[1].Trim()
+            $value = $matches[2].Trim()
+            Set-Item -Path "env:$name" -Value $value
+        }
+    }
+    $seedUser = if ($env:SEED_SUPERADMIN_USERNAME) { $env:SEED_SUPERADMIN_USERNAME } else { "superadmin" }
+    $seedPass = $env:SEED_SUPERADMIN_PASSWORD
+    $seedName = if ($env:SEED_SUPERADMIN_DISPLAY_NAME) { $env:SEED_SUPERADMIN_DISPLAY_NAME } else { "系统管理员" }
+    if (-not $seedPass) {
+        Die "请在 .env 中设置 SEED_SUPERADMIN_PASSWORD"
+    }
+    docker compose -f $ComposeFile exec -T `
+        -e "SEED_SUPERADMIN_USERNAME=$seedUser" `
+        -e "SEED_SUPERADMIN_PASSWORD=$seedPass" `
+        -e "SEED_SUPERADMIN_DISPLAY_NAME=$seedName" `
+        api npx prisma db seed
     if ($LASTEXITCODE -eq 0) {
         New-Item -ItemType File -Path $SeedFlag -Force | Out-Null
     } else {
@@ -121,8 +138,9 @@ Write-Host "  Web:  http://localhost:$port"
 Write-Host "  API:  http://localhost:$port/api/health"
 Write-Host "  MCP:  http://localhost:3100/mcp"
 Write-Host ""
-Write-Host "  演示账号: admin / admin123"
-Write-Host "  员工账号: zhangsan / 123456"
+$seedUserLine = Get-Content $EnvFile | Where-Object { $_ -match '^SEED_SUPERADMIN_USERNAME=' } | Select-Object -First 1
+$seedUser = if ($seedUserLine) { ($seedUserLine -split '=', 2)[1].Trim() } else { "superadmin" }
+Write-Host "  系统管理员: $seedUser（密码见 .env 中 SEED_SUPERADMIN_PASSWORD）"
 Write-Host ""
 Write-Host "  常用命令 (PowerShell / CMD):"
 Write-Host "    docker compose logs -f"

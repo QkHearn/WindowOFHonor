@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
+import { MeBackLink } from '../components/MeBackLink';
 import { Card, LoadingLine, PageHeader } from '../components/ui/Card';
 import type { HonorSummary } from '../types';
 
@@ -18,18 +19,19 @@ export default function MeHonorsPage() {
 
   return (
     <div>
-      <PageHeader title="我的荣誉" subtitle="完整荣誉明细" />
+      <MeBackLink />
+      <PageHeader
+        title="我的赞赏"
+        subtitle={`共收到 ${data?.summary.incentiveCount ?? 0} 次赞赏`}
+      />
       <div className="relative border-l border-champagne/30 ml-4 space-y-6">
         {(data?.records ?? []).map((r) => (
           <div key={r.id} className="relative pl-8">
             <div className="absolute -left-1.5 top-3 w-3 h-3 rounded-full bg-champagne" />
-            <Card className="flex justify-between items-start">
-              <div>
-                <h3 className="font-display text-xl">{r.title}</h3>
-                <p className="text-sm text-graphite mt-1">{r.issuedBy}</p>
-                <time className="text-xs text-graphite/70">{new Date(r.issuedAt).toLocaleString('zh-CN')}</time>
-              </div>
-              <span className="font-display text-2xl text-champagne">+{r.honorValue}</span>
+            <Card>
+              <h3 className="font-display text-xl">{r.title}</h3>
+              <p className="text-sm text-graphite mt-1">{r.issuedBy}</p>
+              <time className="text-xs text-graphite/70">{new Date(r.issuedAt).toLocaleString('zh-CN')}</time>
             </Card>
           </div>
         ))}

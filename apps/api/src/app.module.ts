@@ -12,6 +12,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { LikesModule } from './likes/likes.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { QueriesModule } from './queries/queries.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { QueriesModule } from './queries/queries.module';
     LikesModule,
     DepartmentsModule,
     QueriesModule,
+    AdminModule,
   ],
 })
 export class AppModule {}

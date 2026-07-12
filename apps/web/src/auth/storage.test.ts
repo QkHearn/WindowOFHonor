@@ -1,14 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { defaultHomePath, isSupervisor, saveSession, clearSession, getStoredToken } from './storage';
+import { defaultHomePath, isMember, isSupervisor, saveSession, clearSession, getStoredToken } from './storage';
 
 describe('auth/storage', () => {
-  it('isSupervisor detects supervisor roles', () => {
+  it('isSupervisor detects supervisor only', () => {
     expect(isSupervisor('supervisor')).toBe(true);
-    expect(isSupervisor('super_admin')).toBe(true);
+    expect(isSupervisor('super_admin')).toBe(false);
     expect(isSupervisor('employee')).toBe(false);
   });
 
+  it('isMember includes supervisor and employee', () => {
+    expect(isMember('supervisor')).toBe(true);
+    expect(isMember('employee')).toBe(true);
+    expect(isMember('super_admin')).toBe(false);
+  });
+
   it('defaultHomePath routes by role', () => {
+    expect(defaultHomePath('super_admin')).toBe('/system');
     expect(defaultHomePath('supervisor')).toBe('/supervisor');
     expect(defaultHomePath('employee')).toBe('/me');
   });

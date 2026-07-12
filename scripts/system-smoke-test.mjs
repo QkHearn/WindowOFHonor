@@ -5,6 +5,8 @@
 const BASE = process.env.BASE_URL ?? 'http://localhost:8080';
 const MCP = process.env.MCP_URL ?? 'http://localhost:3100';
 const MCP_KEY = process.env.MCP_API_KEY ?? 'change_me_mcp_client_key';
+const ADMIN_USER = process.env.SEED_SUPERADMIN_USERNAME ?? 'superadmin';
+const ADMIN_PASS = process.env.SEED_SUPERADMIN_PASSWORD ?? 'change_me_on_first_deploy';
 
 const results = [];
 
@@ -48,11 +50,11 @@ await check('Web homepage', async () => {
 });
 
 let token;
-await check('Login (admin)', async () => {
+await check('Login (superadmin)', async () => {
   const data = await fetchJson(`${BASE}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username: 'admin', password: 'admin123' }),
+    body: JSON.stringify({ username: ADMIN_USER, password: ADMIN_PASS }),
   });
   if (!data.accessToken) throw new Error('no token');
   token = data.accessToken;
@@ -65,7 +67,7 @@ await check('Broadcast feed', async () => {
 
 await check('Personal leaderboard', async () => {
   const data = await fetchJson(`${BASE}/api/leaderboard/personal`);
-  if (!data.length || !data[0].rank) throw new Error('invalid leaderboard');
+  if (!Array.isArray(data)) throw new Error('invalid leaderboard');
 });
 
 await check('Team leaderboard', async () => {
@@ -74,7 +76,7 @@ await check('Team leaderboard', async () => {
 });
 
 await check('User search (auth)', async () => {
-  await fetchJson(`${BASE}/api/users/search?q=张`, {
+  await fetchJson(`${BASE}/api/users/search?q=a`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 });

@@ -18,4 +18,9 @@ export class LeaderboardController {
   team(@Query('period') period?: string, @Query('limit') limit?: string) {
     return this.leaderboard.team(period ?? 'all', Number(limit ?? 10));
   }
+
+  @Get('partners')
+  partners(@Query('limit') limit?: string) {
+    return this.leaderboard.partners(Number(limit ?? 20));
+  }
 }

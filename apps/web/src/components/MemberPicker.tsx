@@ -139,12 +139,9 @@ export function MemberPicker({
                 <Avatar name={u.displayName} size="sm" tone="light" />
                 <span className="flex-1 min-w-0">
                   <span className="block font-display truncate">{u.displayName}</span>
-                  <span className="block text-xs text-graphite mt-0.5">@{u.username}</span>
-                </span>
-                {u.honorPoints > 0 && (
-                  <span className="text-xs text-champagne/80 tracking-wider">{u.honorPoints} 分</span>
-                )}
-              </button>
+                <span className="block text-xs text-graphite mt-0.5">@{u.username}</span>
+              </span>
+            </button>
             );
           })}
         {!loading && !filtered.length && (

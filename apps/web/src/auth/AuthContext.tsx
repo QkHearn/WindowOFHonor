@@ -12,7 +12,9 @@ import {
   clearSession,
   getStoredToken,
   getStoredUser,
-  isSupervisor,
+  isAdmin,
+  isMember,
+  isSuperAdmin,
   saveSession,
 } from './storage';
 
@@ -20,6 +22,10 @@ interface AuthContextValue {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+  isSuperAdmin: boolean;
+  isAdmin: boolean;
+  isMember: boolean;
+  /** @deprecated use isAdmin */
   isSupervisor: boolean;
   login: (username: string, password: string) => Promise<User>;
   register: (data: {
@@ -72,7 +78,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       token,
       isAuthenticated: !!token && !!user,
-      isSupervisor: user ? isSupervisor(user.role) : false,
+      isSuperAdmin: user ? isSuperAdmin(user.role) : false,
+      isAdmin: user ? isAdmin(user.role) : false,
+      isMember: user ? isMember(user.role) : false,
+      isSupervisor: user ? isAdmin(user.role) : false,
       login,
       register,
       logout,

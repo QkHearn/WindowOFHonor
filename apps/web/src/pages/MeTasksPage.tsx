@@ -1,49 +1,59 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
-import { Card, LoadingLine, PageHeader } from '../components/ui/Card';
+import { MeBackLink } from '../components/MeBackLink';
+import { TaskOrderCard } from '../components/TaskOrderCard';
+import { TaskStatusHint } from '../components/TaskStatusEditor';
+import {
+  TaskStatusFilter,
+  type TaskStatusFilterValue,
+} from '../components/TaskStatusFilter';
+import { LoadingLine, PageHeader } from '../components/ui/Card';
 import type { TaskOrder } from '../types';
-
-const statusLabel: Record<string, string> = {
-  pending: '待开始',
-  in_progress: '进行中',
-  completed: '已完成',
-  expired: '已过期',
-};
 
 export default function MeTasksPage() {
   const { token } = useAuth();
   const [tasks, setTasks] = useState<TaskOrder[]>([]);
   const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState<TaskStatusFilterValue>('in_progress');
 
   useEffect(() => {
     if (!token) return;
-    api.myTasks(token).then(setTasks).finally(() => setLoading(false));
-  }, [token]);
+    setLoading(true);
+    api
+      .myTasks(token, status === 'all' ? undefined : status)
+      .then(setTasks)
+      .finally(() => setLoading(false));
+  }, [token, status]);
 
-  if (loading) return <LoadingLine />;
+  function patchTask(updated: TaskOrder) {
+    setTasks((prev) => prev.map((t) => (t.id === updated.id ? updated : t)));
+  }
+
+  if (loading && !tasks.length) return <LoadingLine />;
 
   return (
     <div>
-      <PageHeader title="我的任务令" subtitle="主管分配的任务与挑战" />
-      <div className="space-y-4">
-        {tasks.map((t) => (
-          <Card key={t.id} className="flex justify-between items-start">
-            <div>
-              <span className="text-xs uppercase tracking-widest border border-champagne/40 px-2 py-0.5 text-champagne">
-                {statusLabel[t.status] ?? t.status}
-              </span>
-              <h3 className="font-display text-xl mt-3">{t.title}</h3>
-              {t.description && <p className="text-graphite mt-1">{t.description}</p>}
-              {t.assignedBy && <p className="text-xs text-graphite mt-2">分配人：{t.assignedBy.displayName}</p>}
-            </div>
-            {t.dueAt && (
-              <time className="text-xs text-graphite">截止 {new Date(t.dueAt).toLocaleDateString('zh-CN')}</time>
-            )}
-          </Card>
-        ))}
-        {!tasks.length && <p className="text-graphite">暂无任务令</p>}
-      </div>
+      <MeBackLink />
+      <PageHeader title="我的任务令" subtitle="分配给我的任务，可按状态筛选与更新" />
+      <TaskStatusHint />
+      <TaskStatusFilter value={status} onChange={setStatus} />
+      {loading ? (
+        <LoadingLine />
+      ) : (
+        <div className="space-y-4">
+          {tasks.map((t) => (
+            <TaskOrderCard
+              key={t.id}
+              task={t}
+              token={token}
+              showAssigner
+              onUpdated={patchTask}
+            />
+          ))}
+          {!tasks.length && <p className="text-graphite">暂无任务令</p>}
+        </div>
+      )}
     </div>
   );
 }

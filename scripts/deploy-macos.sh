@@ -65,10 +65,18 @@ for i in $(seq 1 40); do
   [[ $i -eq 40 ]] && die "API 启动超时，请检查: docker compose logs api"
 done
 
-# ── 初始化演示数据（仅首次）──────────────────────
+# ── 初始化系统管理员（仅首次）──────────────────────
 if [[ ! -f "$SEED_FLAG" ]]; then
-  log "初始化演示数据（admin/admin123, zhangsan/123456）..."
-  docker compose -f "$COMPOSE_FILE" exec -T api npx ts-node prisma/seed.ts && touch "$SEED_FLAG" || log "seed 跳过（可能已存在数据）"
+  log "初始化系统管理员（读取 .env 中的 SEED_SUPERADMIN_*）..."
+  set -a
+  # shellcheck disable=SC1090
+  source "$ENV_FILE"
+  set +a
+  docker compose -f "$COMPOSE_FILE" exec -T \
+    -e SEED_SUPERADMIN_USERNAME="${SEED_SUPERADMIN_USERNAME:-superadmin}" \
+    -e SEED_SUPERADMIN_PASSWORD="${SEED_SUPERADMIN_PASSWORD:?请在 .env 中设置 SEED_SUPERADMIN_PASSWORD}" \
+    -e SEED_SUPERADMIN_DISPLAY_NAME="${SEED_SUPERADMIN_DISPLAY_NAME:-系统管理员}" \
+    api npx prisma db seed && touch "$SEED_FLAG" || log "seed 跳过（可能已存在数据）"
 fi
 
 PORT=$(grep -E '^NGINX_PORT=' "$ENV_FILE" 2>/dev/null | cut -d= -f2 || echo "8080")
@@ -88,8 +96,7 @@ echo "  Web:  http://localhost:${PORT}"
 echo "  API:  http://localhost:${PORT}/api/health"
 echo "  MCP:  http://localhost:3100/mcp"
 echo ""
-echo "  演示账号: admin / admin123"
-echo "  员工账号: zhangsan / 123456"
+echo "  系统管理员: $(grep -E '^SEED_SUPERADMIN_USERNAME=' "$ENV_FILE" 2>/dev/null | cut -d= -f2- || echo superadmin)（密码见 .env 中 SEED_SUPERADMIN_PASSWORD）"
 echo ""
 echo "  常用命令:"
 echo "    docker compose logs -f"

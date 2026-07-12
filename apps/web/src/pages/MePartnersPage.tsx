@@ -2,6 +2,7 @@ import ReactECharts from 'echarts-for-react';
 import { useEffect, useState } from 'react';
 import { api } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
+import { MeBackLink } from '../components/MeBackLink';
 import { Avatar, Card, LoadingLine, PageHeader } from '../components/ui/Card';
 import type { CoHonorNetwork, PartnerEntry } from '../types';
 
@@ -53,7 +54,8 @@ export default function MePartnersPage() {
 
   return (
     <div>
-      <PageHeader title="最佳拍档" subtitle="共获荣誉关系与协作网络" />
+      <MeBackLink />
+      <PageHeader title="最佳拍档" subtitle="共获赞赏的协作关系与网络" />
       <div className="flex gap-6 mb-8 border-b border-champagne/20">
         {(['list', 'network'] as const).map((t) => (
           <button

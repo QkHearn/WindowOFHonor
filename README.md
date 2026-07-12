@@ -28,8 +28,8 @@ cp .env.example .env
 # 2. 构建并启动
 docker compose up -d --build
 
-# 3. 初始化演示数据（首次）
-docker compose exec api npx ts-node prisma/seed.ts
+# 3. 初始化系统管理员（首次，需在 .env 中配置 SEED_SUPERADMIN_PASSWORD）
+docker compose exec -e SEED_SUPERADMIN_USERNAME -e SEED_SUPERADMIN_PASSWORD -e SEED_SUPERADMIN_DISPLAY_NAME api npx prisma db seed
 
 # 4. 访问
 # Web:    http://localhost:8080
@@ -37,12 +37,17 @@ docker compose exec api npx ts-node prisma/seed.ts
 # MCP:    http://localhost:3100/mcp  (或经网关 http://localhost:8080/mcp)
 ```
 
-### 演示账号
+### 初始管理员
 
-| 角色 | 用户名 | 密码 |
-|------|--------|------|
-| 主管 | admin | admin123 |
-| 员工 | zhangsan / lisi / wangwu | 123456 |
+首次执行 seed 后，使用 `.env` 中配置的系统管理员登录：
+
+| 配置项 | 说明 | 默认 |
+|--------|------|------|
+| `SEED_SUPERADMIN_USERNAME` | 登录用户名 | `superadmin` |
+| `SEED_SUPERADMIN_PASSWORD` | 登录密码（**必填**，生产请改为强密码） | — |
+| `SEED_SUPERADMIN_DISPLAY_NAME` | 显示名称 | `系统管理员` |
+
+登录后在「系统管理」中创建组织、人员与管理员；员工也可通过注册页自助注册（需已有组织）。
 
 ## 镜像构建
 

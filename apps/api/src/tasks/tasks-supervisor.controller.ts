@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { IsArray, IsISO8601, IsOptional, IsString, MinLength } from 'class-validator';
 import { AuthGuard, Roles, RolesGuard } from '../auth/auth.guard';
 import { TasksService } from './tasks.service';
@@ -28,17 +28,20 @@ export class TasksSupervisorController {
   constructor(private readonly tasks: TasksService) {}
 
   @Post()
-  @Roles('super_admin', 'supervisor')
+  @Roles('supervisor')
   create(
-    @Req() req: { user: { id: string; role: string; departmentId: string | null } },
+    @Req() req: { user: { id: string; role: string } },
     @Body() dto: CreateTaskDto,
   ) {
     return this.tasks.create(req.user, dto);
   }
 
   @Get()
-  @Roles('super_admin', 'supervisor')
-  list(@Req() req: { user: { id: string; role: string } }) {
-    return this.tasks.listBySupervisor(req.user);
+  @Roles('supervisor')
+  list(
+    @Req() req: { user: { id: string; role: string } },
+    @Query('status') status?: string,
+  ) {
+    return this.tasks.listIssuedByUser(req.user.id, status);
   }
 }

@@ -27,10 +27,34 @@ export function clearSession() {
   localStorage.removeItem(USER_KEY);
 }
 
+export function isSuperAdmin(role: string) {
+  return role === 'super_admin';
+}
+
+export function isAdmin(role: string) {
+  return role === 'supervisor';
+}
+
+export function isEmployee(role: string) {
+  return role === 'employee';
+}
+
+/** 管理员或员工（可使用业务功能，非系统管理员） */
+export function isMember(role: string) {
+  return role === 'supervisor' || role === 'employee';
+}
+
 export function isSupervisor(role: string) {
-  return role === 'supervisor' || role === 'super_admin';
+  return role === 'supervisor';
 }
 
 export function defaultHomePath(role: string) {
-  return isSupervisor(role) ? '/supervisor' : '/me';
+  if (isSuperAdmin(role)) return '/system';
+  return '/me';
+}
+
+export function roleLabel(role: string) {
+  if (isSuperAdmin(role)) return '系统管理员';
+  if (isAdmin(role)) return '管理员';
+  return '员工';
 }

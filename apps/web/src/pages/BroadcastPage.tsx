@@ -49,7 +49,7 @@ function TimelineItem({ item, index, isLast }: { item: BroadcastItem; index: num
           )}
           <GoldDivider className="max-w-xs mx-auto my-4 opacity-60" />
           <p className="text-center text-sm text-champagne/90 tracking-wider">
-            +{item.honorValue} 荣誉积分 · 由 {item.issuedBy} 呈递
+            由 {item.issuedBy} 发放
           </p>
         </div>
       </div>
@@ -88,12 +88,12 @@ export default function BroadcastPage() {
   const featured = items[featuredIndex];
 
   return (
-    <FullscreenShell subtitle="Honor Broadcast">
+    <FullscreenShell subtitle="Honor Hall">
       <div className="max-w-3xl mx-auto">
         <header className="text-center mb-14">
           <p className="text-xs tracking-[0.4em] uppercase text-champagne mb-4">Window of Honor</p>
-          <h1 className="font-display text-4xl md:text-5xl font-semibold">荣誉展播</h1>
-          <p className="text-graphite mt-4 font-light tracking-wide">按时间轴呈递的全部荣誉</p>
+          <h1 className="font-display text-4xl md:text-5xl font-semibold">荣誉殿堂</h1>
+          <p className="text-graphite mt-4 font-light tracking-wide">全员荣誉的永恒记录</p>
         </header>
 
         {loading ? (
@@ -101,7 +101,7 @@ export default function BroadcastPage() {
         ) : error ? (
           <p className="text-center text-bronze py-16">{error}</p>
         ) : !items.length ? (
-          <p className="text-center text-graphite py-16">暂无荣誉动态，主管呈递后将在此展播</p>
+          <p className="text-center text-graphite py-16">暂无荣誉记录，发放赞赏后将展示于此</p>
         ) : (
           <>
             {featured && (
@@ -123,7 +123,7 @@ export default function BroadcastPage() {
                     <h2 className="font-display text-3xl md:text-4xl mb-3">{featured.title}</h2>
                     <GoldDivider className="max-w-xs mx-auto my-5 opacity-70" />
                     <p className="text-graphite/90">
-                      {featured.recipients.map((r) => r.displayName).join(' · ')} · +{featured.honorValue}
+                      {featured.recipients.map((r) => r.displayName).join(' · ')}
                     </p>
                   </motion.div>
                 </AnimatePresence>

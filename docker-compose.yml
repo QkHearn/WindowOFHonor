@@ -9,6 +9,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-windowofhonor}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-honor} -d ${POSTGRES_DB:-windowofhonor}']
       interval: 10s

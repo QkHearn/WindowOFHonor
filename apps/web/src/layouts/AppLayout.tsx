@@ -8,7 +8,7 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
   `text-sm tracking-wider transition-colors whitespace-nowrap ${isActive ? 'text-champagne' : 'text-graphite hover:text-ink'}`;
 
 export function AppLayout() {
-  const { user, logout, isSupervisor, isAuthenticated } = useAuth();
+  const { user, logout, isSuperAdmin, isAdmin, isMember, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   function goHome() {
@@ -27,23 +27,20 @@ export function AppLayout() {
             荣耀之窗
           </button>
           <div className="flex items-center gap-5 overflow-x-auto">
-            {isSupervisor && (
-              <>
-                <NavLink to="/supervisor" className={linkClass}>工作台</NavLink>
-                <NavLink to="/supervisor/issue" className={linkClass}>呈递荣誉</NavLink>
-                <NavLink to="/supervisor/records" className={linkClass}>发放记录</NavLink>
-                <NavLink to="/supervisor/tasks" className={linkClass}>任务令</NavLink>
-                <NavLink to="/supervisor/teams" className={linkClass}>团队</NavLink>
-              </>
+            {isSuperAdmin && (
+              <NavLink to="/system" className={linkClass}>系统管理</NavLink>
             )}
-            {isAuthenticated && (
+            {isMember && (
               <>
                 <NavLink to="/me" className={linkClass}>个人中心</NavLink>
-                <NavLink to="/team" className={linkClass}>团队展播</NavLink>
+                <NavLink to="/appreciation" className={linkClass}>发放赞赏</NavLink>
+                {isAdmin && (
+                  <NavLink to="/tasks/issue" className={linkClass}>发放任务令</NavLink>
+                )}
+                <NavLink to="/leaderboard" className={linkClass}>排行榜</NavLink>
+                <NavLink to="/broadcast" className={linkClass}>荣誉殿堂</NavLink>
               </>
             )}
-            <NavLink to="/leaderboard" className={linkClass}>排行榜</NavLink>
-            <NavLink to="/broadcast" className={linkClass}>荣誉展播</NavLink>
           </div>
           <div className="flex items-center gap-3 shrink-0">
             {isAuthenticated ? (

@@ -27,7 +27,7 @@ export class IncentivesController {
   constructor(private readonly incentives: IncentivesService) {}
 
   @Post()
-  @Roles('super_admin', 'supervisor')
+  @Roles('supervisor', 'employee')
   issue(@Req() req: { user: { id: string } }, @Body() dto: IssueIncentiveDto) {
     return this.incentives.issue(req.user.id, dto);
   }
