@@ -17,6 +17,9 @@ apps/api/dist/
 .env.*
 !.env.example
 
+# Local deploy marker
+.seeded
+
 # Logs
 logs/
 *.log

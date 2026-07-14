@@ -195,20 +195,83 @@ docker build -t windowofhonor-web:1.0.0 ./apps/web
 docker build -t windowofhonor-mcp:1.0.0 ./apps/mcp
 ```
 
-### 离线部署包
+### 离线部署
+
+适合内网 / 无外网环境：先在有网络（或已有镜像）的机器上打包装包，再拷贝到目标机一键启动。部署过程 **不会从外网拉取镜像**（`--pull never`）。
+
+#### ① 打包（在源码机执行）
 
 ```bash
+# 构建缺失镜像并打包（默认）
 bash scripts/package-images.sh 1.0.0
-# 生成 dist/windowofhonor-1.0.0.tar.gz
+
+# 或：本机已有镜像时，只导出，不重新构建
+bash scripts/package-images.sh 1.0.0 --export-only
 ```
 
-解压后按平台执行一键脚本（自动读取 `.env` 并完成 seed）：
+生成：
+
+| 产物 | 路径 |
+|------|------|
+| 部署目录 | `dist/windowofhonor-1.0.0/` |
+| 镜像包 | `dist/windowofhonor-1.0.0/images/windowofhonor-images.tar.gz` |
+| 压缩包 | `dist/windowofhonor-1.0.0.tar.gz` |
+
+包内含：应用镜像（api / web / mcp）+ 基础镜像（postgres / redis / nginx）、`docker-compose.yml`、`.env.example`、Nginx 配置与各平台部署脚本。
+
+> 镜像为当前打包机的 CPU 架构（如 `arm64` / `amd64`）。目标机架构需一致。
+
+#### ② 拷贝到目标机
+
+```bash
+# 任选其一：拷贝压缩包，或整个目录
+scp dist/windowofhonor-1.0.0.tar.gz user@target:/opt/
+```
+
+#### ③ 目标机解压并部署
+
+前提：目标机已安装 Docker（macOS 用 Docker Desktop）且 Docker 已启动。
+
+```bash
+tar -xzf windowofhonor-1.0.0.tar.gz
+cd windowofhonor-1.0.0
+
+# 编辑环境变量（至少改密码与密钥）
+cp .env.example .env
+# 修改 POSTGRES_PASSWORD、JWT_SECRET、SEED_SUPERADMIN_PASSWORD、MCP_* 等
+
+# 一键离线部署（推荐：macOS / Linux）
+./deploy-offline.sh
+```
+
+也可按平台使用：
 
 | 平台 | 命令 |
 |------|------|
-| Linux | `./deploy-linux.sh` |
+| macOS / Linux（推荐） | `./deploy-offline.sh` |
 | macOS | `./deploy-macos.sh` |
+| Linux | `./deploy-linux.sh` |
 | Windows | `deploy-windows.bat` 或 `powershell -ExecutionPolicy Bypass -File deploy-windows.ps1` |
+
+脚本会：加载 `images/windowofhonor-images.tar.gz` → `docker compose up -d --pull never` → 等待 API 健康 → 首次自动 seed 系统管理员。
+
+#### ④ 访问
+
+| 服务 | 地址 |
+|------|------|
+| Web | http://localhost:8080 |
+| API | http://localhost:8080/api/health |
+| MCP | http://localhost:3100/mcp |
+
+登录用户名为 `.env` 中的 `SEED_SUPERADMIN_USERNAME`（默认 `superadmin`），密码为 `SEED_SUPERADMIN_PASSWORD`。
+
+常用运维：
+
+```bash
+docker compose logs -f
+docker compose restart
+docker compose down
+```
 
 ---
 
