@@ -15,8 +15,8 @@ export default {
         mist: '#6B6B6B',
       },
       fontFamily: {
-        display: ['"Cormorant Garamond"', 'STSong', 'serif'],
-        body: ['Inter', '"Source Han Sans SC"', '"PingFang SC"', 'sans-serif'],
+        display: ['"Songti SC"', 'STSong', 'Georgia', 'serif'],
+        body: ['"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', 'sans-serif'],
       },
       boxShadow: {
         lux: '0 1px 0 rgba(201,169,98,0.12), 0 16px 48px rgba(10,10,10,0.08)',

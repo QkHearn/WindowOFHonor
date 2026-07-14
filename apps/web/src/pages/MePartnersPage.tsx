@@ -31,14 +31,32 @@ export default function MePartnersPage() {
             type: 'graph',
             layout: 'force',
             roam: true,
-            label: { show: true, color: '#C9A962', fontFamily: 'serif' },
+            label: {
+              show: true,
+              position: 'bottom',
+              distance: 10,
+              color: '#C9A962',
+              fontFamily: '"Songti SC", STSong, Georgia, serif',
+              fontSize: 12,
+            },
             lineStyle: { color: '#C9A962', curveness: 0.2, width: 2 },
             force: { repulsion: 200, edgeLength: 120 },
             data: network.nodes.map((n) => ({
               id: n.id,
               name: n.label,
               symbolSize: n.isCenter ? 56 : 36 + (n.honorPoints ? Math.min(n.honorPoints / 20, 20) : 0),
-              itemStyle: { color: n.isCenter ? '#C9A962' : '#1A1A1A', borderColor: '#C9A962', borderWidth: 1 },
+              itemStyle: n.isCenter
+                ? { color: '#C9A962', borderColor: '#F7F3ED', borderWidth: 2 }
+                : { color: '#1A1A1A', borderColor: '#C9A962', borderWidth: 1 },
+              label: n.isCenter
+                ? {
+                    color: '#F7F3ED',
+                    fontWeight: 600,
+                    fontSize: 14,
+                    textBorderColor: '#0A0A0A',
+                    textBorderWidth: 3,
+                  }
+                : undefined,
             })),
             links: network.edges.map((e) => ({
               source: e.source,

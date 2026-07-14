@@ -39,7 +39,7 @@ export function AppLayout() {
           >
             荣耀之窗
           </button>
-          <div className="flex items-center gap-7 overflow-x-auto">
+          <div className="flex items-center justify-center gap-7 min-w-0">
             {isSuperAdmin && <NavItem to="/system">系统管理</NavItem>}
             {isMember && (
               <>
@@ -77,7 +77,7 @@ export function AppLayout() {
           </div>
         </div>
       </nav>
-      <main className="max-w-6xl mx-auto px-6 py-10 md:py-12">
+      <main className="max-w-6xl mx-auto px-6 py-10 md:py-12 min-h-[calc(100vh-11rem)]">
         <Outlet />
       </main>
       <footer className="max-w-6xl mx-auto px-6 pb-10">

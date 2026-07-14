@@ -43,7 +43,7 @@ done
 
 # ── 启动服务 ──────────────────────────────────────
 log "启动服务..."
-docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d
+docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --pull never
 
 log "等待 API 健康检查..."
 for i in $(seq 1 30); do

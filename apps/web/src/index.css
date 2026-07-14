@@ -9,7 +9,7 @@
 
   body {
     margin: 0;
-    font-family: Inter, 'Source Han Sans SC', 'PingFang SC', sans-serif;
+    font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
     font-weight: 400;
     font-size: 15px;
     line-height: 1.6;
@@ -89,7 +89,8 @@
 
   .nav-link-active::after {
     content: '';
-    @apply absolute -bottom-[17px] left-0 right-0 h-0.5;
+    @apply absolute left-0 right-0 h-px;
+    bottom: -6px;
     background: linear-gradient(90deg, transparent, #c9a962, transparent);
   }
 
